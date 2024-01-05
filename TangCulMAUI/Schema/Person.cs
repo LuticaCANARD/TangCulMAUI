@@ -9,9 +9,20 @@ using Newtonsoft.Json.Linq;
 
 namespace TangCulMAUI.Schema
 {
-    public struct MyStruct
+    public struct PersonSetting
     {
-        
+        Dictionary<string, object> setting;
+        public PersonSetting(JObject Pairs) { 
+
+            setting = new Dictionary<string, object>();
+            foreach (var item in Pairs)
+            {
+
+                // 속성 지정해서 보내기.
+
+            }
+            // JSON에서 여기로 저장.
+        }
     }
     public enum PersonStatus
     {
@@ -43,7 +54,7 @@ namespace TangCulMAUI.Schema
         /// </summary>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public int Dice(bool mode,Dictionary<string,string> setting)
+        public int Dice(bool mode,Dictionary<string, object> setting)
         {
             if(Status == PersonStatus.Dead && !mode)
             {
@@ -51,20 +62,37 @@ namespace TangCulMAUI.Schema
             }
             Random rand = new();
 
-            int dice = Age < int.Parse(setting["dice_age"]) ? GetMaxDice() : rand.Next(0, 1000);
+            int dice = Age < (int)setting["dice_age"] ? GetMaxDice() : rand.Next(0, 1000);
             if (!mode) Age ++;
 
             int diseases = 0;
             int diseases_count = 1;
+            int dis = (int)setting["disease"];
+
+
             if (Traits != null)
             {
+                Dictionary<string, object> trait_info = (Dictionary<string, object>)setting["trait"];
                 foreach (string trait in Traits)
                 {
                     if (trait == null) continue;
+                    int perscope;
+                    perscope = Age < (int)setting["dice_age"] ? 1 : (int)setting["scope_dice"];
+                    if (trait_info[trait] != null)
+                    {
 
+                    }
+               
                 }
             }
 
+
+
+            int die = GetDiePoint(Age, (int[])setting["die_age"], (int[])setting["die_probability"]);
+            Status = dice > die + dis ? PersonStatus.Dead :
+                 dice > dis ? PersonStatus.Sick : 
+                 PersonStatus.Alive;
+            DicePoint = dice;
             Thread.Sleep(12);
             return dice;
         }
@@ -76,6 +104,21 @@ namespace TangCulMAUI.Schema
             rand = new();
             int dice2v = rand.Next(1, 100);
             return Math.Max(dice1v, dice2v);
+        }
+
+        static int GetDiePoint(int age,int[] agearr, int[] pointarr)
+        {
+
+            int v = pointarr[pointarr.Length - 1];
+            for (int i = 0; i < agearr.Length; i++)
+            {
+                if (age < (int)agearr[i])
+                {
+                    return pointarr[i];
+                }
+
+            }
+            return v;
         }
 
     }
