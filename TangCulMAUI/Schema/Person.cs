@@ -9,7 +9,77 @@ using Newtonsoft.Json.Linq;
 
 namespace TangCulMAUI.Schema
 {
+    public struct MyStruct
+    {
+        
+    }
+    public enum PersonStatus
+    {
+        Alive,
+        Sick,
+        Dead
+    }
     public class Person
+    {
+        public string? Name { get; set; }
+        public int Age { get; set; }
+        public string[]? Traits { get; set; }
+        public int StatusToDie {  get; set; }
+        public int DicePoint { get; set; }
+        public bool IsDead { get; set; }
+        public PersonStatus Status { get; set; }
+        public string? Agent { get; set; }
+
+        public Person(string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent) 
+        {
+            this.Name = _name;
+            this.Traits = _trait;
+            this.Age = _age;
+            this.Status = _st_die;
+            this.Agent = _agent;
+        }
+        /// <summary>
+        /// 사망등을 결정하는 Dice를 굴리고, 
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        public int Dice(bool mode,Dictionary<string,string> setting)
+        {
+            if(Status == PersonStatus.Dead && !mode)
+            {
+                return 0;
+            }
+            Random rand = new();
+
+            int dice = Age < int.Parse(setting["dice_age"]) ? GetMaxDice() : rand.Next(0, 1000);
+            if (!mode) Age ++;
+
+            int diseases = 0;
+            int diseases_count = 1;
+            if (Traits != null)
+            {
+                foreach (string trait in Traits)
+                {
+                    if (trait == null) continue;
+
+                }
+            }
+
+            Thread.Sleep(12);
+            return dice;
+        }
+
+        static int GetMaxDice()
+        {
+            Random rand = new();
+            int dice1v = rand.Next(1, 100);
+            rand = new();
+            int dice2v = rand.Next(1, 100);
+            return Math.Max(dice1v, dice2v);
+        }
+
+    }
+    public class Person____
     {
 
         public string name { get; set; }
@@ -20,7 +90,7 @@ namespace TangCulMAUI.Schema
         public int dicek { get; set; }
         public string agent { get; set; }
 
-        public Person(string _name, int _age, string[] _trait, int _st_die, JObject keyValues, string _agent)
+        public Person____(string _name, int _age, string[] _trait, int _st_die, JObject keyValues, string _agent)
         {
             this.name = _name;
             this.traits = _trait;
