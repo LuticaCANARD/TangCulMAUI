@@ -68,27 +68,56 @@ namespace TangCulMAUI.Schema
             int diseases = 0;
             int diseases_count = 1;
             int dis = (int)setting["disease"];
+            Dictionary<string, object> trait_info = (Dictionary<string, object>)setting["trait"];
 
-
+            int die = GetDiePoint(Age, (int[])setting["die_age"], (int[])setting["die_probability"]);
+            JArray diepercent = (JArray)setting["die_probability"];
+            JArray dieage = (JArray)setting["die_age"];
             if (Traits != null)
             {
-                Dictionary<string, object> trait_info = (Dictionary<string, object>)setting["trait"];
                 foreach (string trait in Traits)
                 {
                     if (trait == null) continue;
-                    int perscope;
-                    perscope = Age < (int)setting["dice_age"] ? 1 : (int)setting["scope_dice"];
+                    
                     if (trait_info[trait] != null)
                     {
+                        Dictionary<string, object> tra_obj = (Dictionary<string, object>)trait_info[trait];
+                        bool is_there_status = tra_obj.TryGetValue("scope_dice", out object? stat);
+                        
+                        int perscope = Age < (int)setting["dice_age"] ? 1 : 
+                            is_there_status && stat != null ? (int) stat : (int)setting["scope_dice"];
 
+                        if ((string)tra_obj["type"] == "unique")
+                        {
+                            if (tra_obj["die_age"] != null)
+                            {
+                                dieage = (JArray)tra_obj["die_age"];
+                                diepercent = (JArray)tra_obj["die_probability"];
+                                die = (int)diepercent[diepercent.Count - 1];
+
+                            }
+                            if (tra_obj["disease"] != null)
+                            {
+                                diseases += int.Parse(tra_obj["disease"].ToString()) * perscope;
+                                diseases_count++;
+
+                            }
+                            if (tra_obj["death_p"] != null)
+                            {
+                                die += (int)tra_obj["death_p"] * perscope;
+                            }
+                        }
+                        else
+                        {
+                            if (tra_obj["death_p"] != null)
+                            {
+                                die += (int)tra_obj["death_p"] * perscope;
+                            }
+                        }
                     }
                
                 }
             }
-
-
-
-            int die = GetDiePoint(Age, (int[])setting["die_age"], (int[])setting["die_probability"]);
             Status = dice > die + dis ? PersonStatus.Dead :
                  dice > dis ? PersonStatus.Sick : 
                  PersonStatus.Alive;
@@ -109,7 +138,7 @@ namespace TangCulMAUI.Schema
         static int GetDiePoint(int age,int[] agearr, int[] pointarr)
         {
 
-            int v = pointarr[pointarr.Length - 1];
+            int v = pointarr[^1];
             for (int i = 0; i < agearr.Length; i++)
             {
                 if (age < (int)agearr[i])
