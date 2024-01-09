@@ -11,10 +11,11 @@ namespace TangCulMAUI.Schema
 {
     public readonly struct PersonSetting
     {
-        public readonly Dictionary<string, PersonTraitInfo> Traits ;
+        public readonly Dictionary<string, PersonTraitInfo> Traits;
         public readonly int dice_age, disease, scope_dice;
         public readonly int[] die_probability, die_age;
-        public PersonSetting(JObject Pairs) {
+        public PersonSetting(JObject Pairs)
+        {
             dice_age = (int)(Pairs["dice_age"] ?? 0);
             disease = (int)(Pairs["disease"] ?? 0);
             scope_dice = (int)(Pairs["scope_dice"] ?? 0);
@@ -26,9 +27,9 @@ namespace TangCulMAUI.Schema
         Dictionary<string, PersonTraitInfo> ParsingTraits(JObject pairs)
         {
             Dictionary<string, PersonTraitInfo> ret = new();
-            foreach(var pair in pairs)
+            foreach (var pair in pairs)
             {
-                if(pair.Value == null) continue;
+                if (pair.Value == null) continue;
                 ret[pair.Key] = new PersonTraitInfo((JObject)pair.Value);
             }
 
@@ -45,7 +46,7 @@ namespace TangCulMAUI.Schema
         {
             if (Info["disease"] != null) disease = (int)Info["disease"];
             if (Info["death_p"] != null) death_p = (int)Info["death_p"];
-            if (Info["type"] != null) type = (string) Info["type"] ;
+            if (Info["type"] != null) type = (string)Info["type"];
             if (Info["die_probability"] != null) die_probability = ((JArray)Info["die_probability"]).ToObject<int[]>();
             if (Info["die_age"] != null) die_age = ((JArray)Info["die_age"]).ToObject<int[]>();
         }
@@ -61,21 +62,23 @@ namespace TangCulMAUI.Schema
         public string? Name { get; set; } = _name;
         public int Age { get; set; } = _age;
         public string[]? Traits { get; set; } = _trait;
-        public int StatusToDie {  get; set; }
+        public int StatusToDie { get; set; }
         public int DicePoint { get; set; }
         public bool IsDead { get; set; }
         public PersonStatus Status { get; set; } = _st_die;
         public string? Agent { get; set; } = _agent;
-        public string DisplayStatus { get
+        public string DisplayStatus
+        {
+            get
             {
-                switch(Status)
+                return Status switch
                 {
-                    case PersonStatus.Alive: return "생존";
-                    case PersonStatus.Sick: return "아픔";
-                    case PersonStatus.Dead: return "사망";
-                }
-                return "";
-            } 
+                    PersonStatus.Alive => "생존",
+                    PersonStatus.Sick => "아픔",
+                    PersonStatus.Dead => "사망",
+                    _ => "",
+                };
+            }
         }
 
         /// <summary>
@@ -85,12 +88,12 @@ namespace TangCulMAUI.Schema
         /// <returns></returns>
         public int Dice(bool mode, PersonSetting setting)
         {
-            if(Status == PersonStatus.Dead && !mode) return 0;
-            
+            if (Status == PersonStatus.Dead && !mode) return 0;
+
             Random rand = new();
 
-            int dice = Age < (int)setting.dice_age ? GetMaxDice() : rand.Next(0, 1000);
-            if (!mode) Age ++;
+            int dice = Age < setting.dice_age ? GetMaxDice() : rand.Next(0, 1000);
+            if (!mode) Age++;
 
             int diseases = 0;
             int diseases_count = 1;
@@ -105,10 +108,10 @@ namespace TangCulMAUI.Schema
                 foreach (string trait in Traits)
                 {
                     if (trait == null) continue;
-                    
+
                     if (trait_info.TryGetValue(trait, out PersonTraitInfo tra_obj) != false)
-                    {                        
-                        int perscope = Age < (int)setting.dice_age ? 1 : setting.scope_dice;
+                    {
+                        int perscope = Age < setting.dice_age ? 1 : setting.scope_dice;
 
                         if (tra_obj.type == "unique")
                         {
@@ -138,11 +141,11 @@ namespace TangCulMAUI.Schema
                             }
                         }
                     }
-               
+
                 }
             }
             Status = dice > die + dis ? PersonStatus.Dead :
-                 dice > dis ? PersonStatus.Sick : 
+                 dice > dis ? PersonStatus.Sick :
                  PersonStatus.Alive;
             DicePoint = dice;
             Thread.Sleep(12);
@@ -158,13 +161,13 @@ namespace TangCulMAUI.Schema
             return Math.Max(dice1v, dice2v);
         }
 
-        static int GetDiePoint(int age,int[] agearr, int[] pointarr)
+        static int GetDiePoint(int age, int[] agearr, int[] pointarr)
         {
 
             int v = pointarr[^1];
             for (int i = 0; i < agearr.Length; i++)
             {
-                if (age < (int)agearr[i])
+                if (age < agearr[i])
                 {
                     return pointarr[i];
                 }

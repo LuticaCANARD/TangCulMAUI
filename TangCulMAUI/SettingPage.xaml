@@ -8,5 +8,11 @@
             Text="Welcome to .NET MAUI!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        <Button  x:Name="SettingSelect"
+                Text="Select Setting File"
+                SemanticProperties.Hint="Select Setting.json"
+                Clicked="SetPath"
+                HorizontalOptions="Center" />
+               
     </VerticalStackLayout>
 </ContentPage>
