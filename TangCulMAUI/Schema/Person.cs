@@ -66,6 +66,17 @@ namespace TangCulMAUI.Schema
         public bool IsDead { get; set; }
         public PersonStatus Status { get; set; } = _st_die;
         public string? Agent { get; set; } = _agent;
+        public string DisplayStatus { get
+            {
+                switch(Status)
+                {
+                    case PersonStatus.Alive: return "생존";
+                    case PersonStatus.Sick: return "아픔";
+                    case PersonStatus.Dead: return "사망";
+                }
+                return "";
+            } 
+        }
 
         /// <summary>
         /// 사망등을 결정하는 Dice를 굴리고, 

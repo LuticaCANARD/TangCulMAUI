@@ -26,7 +26,7 @@
                 <dg:DataGridColumn Title="Name" PropertyName="Name" />
                 <dg:DataGridColumn Title="나이" PropertyName="Age" />
                 <dg:DataGridColumn Title="Population" PropertyName="Traits" />
-                <dg:DataGridColumn Title="상태" PropertyName="St_die" />
+                <dg:DataGridColumn Title="상태" PropertyName="DisplayStatus" />
                 <dg:DataGridColumn Title="Dice" PropertyName="Dice" />
                 <dg:DataGridColumn Title="소속" PropertyName="Agent" />
             </dg:DataGrid.Columns>

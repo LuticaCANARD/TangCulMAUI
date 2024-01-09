@@ -5,6 +5,7 @@
              x:Class="TangCulMAUI.App">
     <Application.Resources>
         <ResourceDictionary>
+            <StyleSheet Source="/Resources/styles.css" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
