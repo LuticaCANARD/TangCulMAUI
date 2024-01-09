@@ -9,19 +9,45 @@ using Newtonsoft.Json.Linq;
 
 namespace TangCulMAUI.Schema
 {
-    public struct PersonSetting
+    public readonly struct PersonSetting
     {
-        Dictionary<string, object> setting;
-        public PersonSetting(JObject Pairs) { 
-
-            setting = new Dictionary<string, object>();
-            foreach (var item in Pairs)
-            {
-
-                // 속성 지정해서 보내기.
-
-            }
+        public readonly Dictionary<string, PersonTraitInfo> Traits ;
+        public readonly int dice_age, disease, scope_dice;
+        public readonly int[] die_probability, die_age;
+        public PersonSetting(JObject Pairs) {
+            dice_age = (int)(Pairs["dice_age"] ?? 0);
+            disease = (int)(Pairs["disease"] ?? 0);
+            scope_dice = (int)(Pairs["scope_dice"] ?? 0);
+            die_probability = ((JArray)Pairs["die_probability"]).ToObject<int[]>() ?? [];
+            die_age = ((JArray)Pairs["die_age"]).ToObject<int[]>() ?? [];
+            Traits = ParsingTraits((JObject)Pairs["Traits"]);
             // JSON에서 여기로 저장.
+        }
+        Dictionary<string, PersonTraitInfo> ParsingTraits(JObject pairs)
+        {
+            Dictionary<string, PersonTraitInfo> ret = new();
+            foreach(var pair in pairs)
+            {
+                if(pair.Value == null) continue;
+                ret[pair.Key] = new PersonTraitInfo((JObject)pair.Value);
+            }
+
+            return ret;
+        }
+    }
+    public struct PersonTraitInfo
+    {
+        public readonly int? disease, death_p;
+        public readonly int[]? die_probability, die_age;
+        public readonly string type;
+
+        public PersonTraitInfo(JObject Info)
+        {
+            if (Info["disease"] != null) disease = (int)Info["disease"];
+            if (Info["death_p"] != null) death_p = (int)Info["death_p"];
+            if (Info["type"] != null) type = (string) Info["type"] ;
+            if (Info["die_probability"] != null) die_probability = ((JArray)Info["die_probability"]).ToObject<int[]>();
+            if (Info["die_age"] != null) die_age = ((JArray)Info["die_age"]).ToObject<int[]>();
         }
     }
     public enum PersonStatus
@@ -30,88 +56,74 @@ namespace TangCulMAUI.Schema
         Sick,
         Dead
     }
-    public class Person
+    public class Person(string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
     {
-        public string? Name { get; set; }
-        public int Age { get; set; }
-        public string[]? Traits { get; set; }
+        public string? Name { get; set; } = _name;
+        public int Age { get; set; } = _age;
+        public string[]? Traits { get; set; } = _trait;
         public int StatusToDie {  get; set; }
         public int DicePoint { get; set; }
         public bool IsDead { get; set; }
-        public PersonStatus Status { get; set; }
-        public string? Agent { get; set; }
+        public PersonStatus Status { get; set; } = _st_die;
+        public string? Agent { get; set; } = _agent;
 
-        public Person(string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent) 
-        {
-            this.Name = _name;
-            this.Traits = _trait;
-            this.Age = _age;
-            this.Status = _st_die;
-            this.Agent = _agent;
-        }
         /// <summary>
         /// 사망등을 결정하는 Dice를 굴리고, 
         /// </summary>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public int Dice(bool mode,Dictionary<string, object> setting)
+        public int Dice(bool mode, PersonSetting setting)
         {
-            if(Status == PersonStatus.Dead && !mode)
-            {
-                return 0;
-            }
+            if(Status == PersonStatus.Dead && !mode) return 0;
+            
             Random rand = new();
 
-            int dice = Age < (int)setting["dice_age"] ? GetMaxDice() : rand.Next(0, 1000);
+            int dice = Age < (int)setting.dice_age ? GetMaxDice() : rand.Next(0, 1000);
             if (!mode) Age ++;
 
             int diseases = 0;
             int diseases_count = 1;
-            int dis = (int)setting["disease"];
-            Dictionary<string, object> trait_info = (Dictionary<string, object>)setting["trait"];
+            int dis = setting.disease;
+            Dictionary<string, PersonTraitInfo> trait_info = setting.Traits;
+            int[] diepercent = setting.die_probability;
+            int[] dieage = setting.die_age;
+            int die = GetDiePoint(Age, dieage, diepercent);
 
-            int die = GetDiePoint(Age, (int[])setting["die_age"], (int[])setting["die_probability"]);
-            JArray diepercent = (JArray)setting["die_probability"];
-            JArray dieage = (JArray)setting["die_age"];
             if (Traits != null)
             {
                 foreach (string trait in Traits)
                 {
                     if (trait == null) continue;
                     
-                    if (trait_info[trait] != null)
-                    {
-                        Dictionary<string, object> tra_obj = (Dictionary<string, object>)trait_info[trait];
-                        bool is_there_status = tra_obj.TryGetValue("scope_dice", out object? stat);
-                        
-                        int perscope = Age < (int)setting["dice_age"] ? 1 : 
-                            is_there_status && stat != null ? (int) stat : (int)setting["scope_dice"];
+                    if (trait_info.TryGetValue(trait, out PersonTraitInfo tra_obj) != false)
+                    {                        
+                        int perscope = Age < (int)setting.dice_age ? 1 : setting.scope_dice;
 
-                        if ((string)tra_obj["type"] == "unique")
+                        if (tra_obj.type == "unique")
                         {
-                            if (tra_obj["die_age"] != null)
+                            if (tra_obj.die_age != null && tra_obj.die_probability != null)
                             {
-                                dieage = (JArray)tra_obj["die_age"];
-                                diepercent = (JArray)tra_obj["die_probability"];
-                                die = (int)diepercent[diepercent.Count - 1];
+                                dieage = tra_obj.die_age;
+                                diepercent = tra_obj.die_probability;
+                                die = diepercent[^1];
 
                             }
-                            if (tra_obj["disease"] != null)
+                            if (tra_obj.disease != null)
                             {
-                                diseases += int.Parse(tra_obj["disease"].ToString()) * perscope;
+                                diseases += (int)tra_obj.disease * perscope;
                                 diseases_count++;
 
                             }
-                            if (tra_obj["death_p"] != null)
+                            if (tra_obj.death_p != null)
                             {
-                                die += (int)tra_obj["death_p"] * perscope;
+                                die += (int)tra_obj.death_p * perscope;
                             }
                         }
                         else
                         {
-                            if (tra_obj["death_p"] != null)
+                            if (tra_obj.death_p != null)
                             {
-                                die += (int)tra_obj["death_p"] * perscope;
+                                die += (int)tra_obj.death_p * perscope;
                             }
                         }
                     }
@@ -151,126 +163,6 @@ namespace TangCulMAUI.Schema
         }
 
     }
-    public class Person____
-    {
-
-        public string name { get; set; }
-        public int age { get; set; }
-        public string[] traits { get; set; }
-        public int st_die { get; set; }
-        public JObject book { get; set; }
-        public int dicek { get; set; }
-        public string agent { get; set; }
-
-        public Person____(string _name, int _age, string[] _trait, int _st_die, JObject keyValues, string _agent)
-        {
-            this.name = _name;
-            this.traits = _trait;
-            this.age = _age;
-            this.st_die = _st_die;
-            this.book = keyValues;
-            this.agent = _agent;
-        }
-        public int dice(bool mode)
-        {
-            if (this.st_die == 0 && !mode) return 0;
-            int age = this.age;
-            Random rand = new Random();
-
-            int dis = (int)book["disease"];
-            JArray diepercent = (JArray)book["die_probability"];
-            JArray dieage = (JArray)book["die_age"];
-            JObject trait = (JObject)book["trait"];
-            int die = (int)diepercent[diepercent.Count - 1];
-
-            int dicef;
-
-            if (age < (int)book["dice_age"])
-            {
-                int dice1v = rand.Next(1, 100);
-                rand = new Random();
-
-                int dice2v = rand.Next(1, 100);
-                dicef = Math.Max(dice1v, dice2v);
-            }
-            else
-            { dicef = rand.Next(0, 1000); }
-            int diseases = 0;
-            int dis_count = 1;
-            foreach (string tra in this.traits)
-            {
-                int perscope;
-                if (age < (int)book["dice_age"])
-                    perscope = 1;
-                else
-                    perscope = (int)book["scope_dice"];
-
-                if (trait[tra] != null)
-                {
-
-                    JObject tra_obj = (JObject)trait[tra];
-                    if (tra_obj["scope_dice"] != null)
-                    {
-                        if (age < (int)book["dice_age"])
-                        {
-                            perscope = 1;
-                        }
-                        else
-                        {
-                            perscope = (int)tra_obj["scope_dice"];
-                        }
-                    }
-                    if (tra_obj["type"].ToString() == "unique")
-                    {
-                        if (tra_obj["die_age"] != null)
-                        {
-                            dieage = (JArray)tra_obj["die_age"];
-                            diepercent = (JArray)tra_obj["die_probability"];
-                            die = (int)diepercent[diepercent.Count - 1];
-
-                        }
-                        if (tra_obj["disease"] != null)
-                        {
-                            diseases += int.Parse(tra_obj["disease"].ToString()) * perscope;
-                            dis_count++;
-
-                        }
-                        if (tra_obj["death_p"] != null)
-                        {
-                            die += (int)tra_obj["death_p"] * perscope;
-                        }
-                    }
-                    else
-                    {
-                        if (tra_obj["death_p"] != null)
-                        {
-                            die += (int)tra_obj["death_p"] * perscope;
-                        }
-                    }
-                }
-            }
-            dis = (dis + diseases) / dis_count;
 
 
-            if (!mode) this.age += 1;
-
-            for (int i = 0; i < dieage.Count; i++)
-            {
-                if (age < (int)dieage[i])
-                {
-                    die = (int)diepercent[i];
-                    break;
-                }
-
-            }
-            if (dicef > die + dis) this.st_die = 2;
-            else if (dicef > die) this.st_die = 1;
-            else this.st_die = 0;
-            this.dicek = dicef;
-            Thread.Sleep(12);
-            return dicef;
-        }
-
-
-    }
 }
