@@ -13,13 +13,13 @@
                 SemanticProperties.Hint="Select Setting.json"
                 Clicked="SetPath"
                 HorizontalOptions="Center" />
-        <Button  x:Name="SettingSelect"
+        <Button  x:Name="SettingSelect_"
                 Text="Select Setting File"
                 SemanticProperties.Hint="Select Setting.json"
                 Clicked="SetPath"
                 HorizontalOptions="Center" />
 
-        <Button  x:Name="SettingSelect"
+        <Button  x:Name="SettingSelect__"
                 Text="Select Setting File"
                 SemanticProperties.Hint="Select Setting.json"
                 Clicked="SetPath"

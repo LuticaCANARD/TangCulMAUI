@@ -5,9 +5,9 @@
              x:Class="TangCulMAUI.PersonList">
 
     <Grid RowDefinitions="70,*">
+        
         <!--        <Button Text="Clear monkeys" Clicked="Button_Clicked" Margin="10" /> -->
-
-        <dg:DataGrid Grid.Row="1" ItemsSource="{Binding Monkeys}" SelectionEnabled="True" SelectedItem="{Binding SelectedMonkey}"
+        <dg:DataGrid Grid.Row="1" ItemsSource="{Binding People}" SelectionEnabled="True" SelectedItem="{Binding SelectedPerson}"
                      RowHeight="70" HeaderHeight="50" PullToRefreshCommand="{Binding RefreshCommand}"
                      IsRefreshing="{Binding IsRefreshing}" HeaderBackground="Red">
             <dg:DataGrid.NoDataView>
@@ -23,9 +23,9 @@
                         </DataTemplate>
                     </dg:DataGridColumn.CellTemplate>
                 </dg:DataGridColumn>
-                <dg:DataGridColumn Title="Name" PropertyName="Name" />
+                <dg:DataGridColumn Title="이름" PropertyName="Name" />
                 <dg:DataGridColumn Title="나이" PropertyName="Age" />
-                <dg:DataGridColumn Title="Population" PropertyName="Traits" />
+                <dg:DataGridColumn Title="특성" PropertyName="TraitsToShow" />
                 <dg:DataGridColumn Title="상태" PropertyName="DisplayStatus" />
                 <dg:DataGridColumn Title="Dice" PropertyName="Dice" />
                 <dg:DataGridColumn Title="소속" PropertyName="Agent" />

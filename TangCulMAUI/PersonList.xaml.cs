@@ -1,4 +1,6 @@
 using Newtonsoft.Json.Linq;
+using TangCulMAUI.DataGrid;
+using TangCulMAUI.Schema;
 using TangCulMAUI.Schema.InternalData;
 
 namespace TangCulMAUI;
@@ -6,10 +8,22 @@ namespace TangCulMAUI;
 public partial class PersonList : ContentPage
 {
 
-	public PersonList()
+
+    public List<Person> SelectedPersonData = new List<Person>();
+    public List<Person> Source_ = AppData.Instance.PersonData;
+
+
+
+    public PersonList()
 	{
-		InitializeComponent();
-		LoadPersonList();
+        LoadPersonList();
+        AppData.Instance.PersonData.Add(
+            new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb")
+         );
+        InitializeComponent();
+        BindingContext = new PersonData();
+
+
 
     }
 
@@ -23,25 +37,25 @@ public partial class PersonList : ContentPage
             JArray personOrigionData = JArray.Parse(seriallizedData);
             foreach (JObject personObject in personOrigionData.Cast<JObject>())
             {
-                Schema.PersonStatus status_Dis = Schema.PersonStatus.Alive;
+                PersonStatus status_Dis = PersonStatus.Alive;
                 JToken alive_ = personObject["st_die"];
                 if (alive_ != null)
-                    status_Dis = (int)alive_ == 2 ? Schema.PersonStatus.Alive :
-                                 (int)alive_ == 1 ? Schema.PersonStatus.Sick : Schema.PersonStatus.Dead;
+                    status_Dis = (int) alive_ == 2 ? PersonStatus.Alive :
+                                 (int) alive_ == 1 ? PersonStatus.Sick : PersonStatus.Dead;
 
-                Schema.Person loadedperson = new Schema.Person(
+                Person loadedperson = new(
                     (string)(personObject["name"] ?? "error"),
-                    ((int)(personObject["age"] ?? 0)),
+                    (int)(personObject["age"] ?? 0),
                     personObject["trait"].ToObject<string[]>(),
                     status_Dis,
                     (string)personObject["trait"]
-                    );
+                );
                 AppData.Instance.PersonData.Add(loadedperson);
             }
         }
         catch (Exception ex)
         {
-
+            Console.WriteLine(ex.ToString());
         }
 	}
 }

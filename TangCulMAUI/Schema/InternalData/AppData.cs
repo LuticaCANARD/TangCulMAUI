@@ -19,6 +19,7 @@ namespace TangCulMAUI.Schema.InternalData
         }
         public List<Person> PersonData = [];
 
+        public string SavePath = "";
         public string SettingPath = "";
 
     }

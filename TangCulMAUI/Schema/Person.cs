@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TangCulMAUI.Schema.InternalData;
 
 
 namespace TangCulMAUI.Schema
@@ -62,6 +63,17 @@ namespace TangCulMAUI.Schema
         public string? Name { get; set; } = _name;
         public int Age { get; set; } = _age;
         public string[]? Traits { get; set; } = _trait;
+        public string TraitsToShow { get {
+                if (Traits == null) return "";
+                string show = "";
+                for(int i = 0; i < Traits.Length; i++)
+                {
+                    show += Traits[i]; 
+                    if(i!= Traits.Length-1) show += ", ";
+                }
+                return show;
+            } }
+
         public int StatusToDie { get; set; }
         public int DicePoint { get; set; }
         public bool IsDead { get; set; }
@@ -78,6 +90,15 @@ namespace TangCulMAUI.Schema
                     PersonStatus.Dead => "사망",
                     _ => "",
                 };
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "생존": Status = PersonStatus.Alive; break;
+                    case "아픔": Status = PersonStatus.Sick; break;
+                    case "사망": Status = PersonStatus.Dead; break;
+                }
             }
         }
 
@@ -176,7 +197,22 @@ namespace TangCulMAUI.Schema
             return v;
         }
 
+        public JObject SavePersonToJsonObject(string path)
+        {
+            string real_path = path ?? AppData.Instance.SavePath;
+            JObject ret = new JObject();
+            try
+            {
+                return ret;
+            } 
+            catch (Exception ex)
+            {
+
+                return new JObject();
+            }
+        }
     }
+
 
 
 }
