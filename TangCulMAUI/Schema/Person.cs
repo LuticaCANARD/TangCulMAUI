@@ -25,7 +25,8 @@ namespace TangCulMAUI.Schema
             Traits = ParsingTraits((JObject)Pairs["Traits"]);
             // JSON에서 여기로 저장.
         }
-        Dictionary<string, PersonTraitInfo> ParsingTraits(JObject pairs)
+
+        static Dictionary<string, PersonTraitInfo> ParsingTraits(JObject pairs)
         {
             Dictionary<string, PersonTraitInfo> ret = new();
             foreach (var pair in pairs)
@@ -37,7 +38,7 @@ namespace TangCulMAUI.Schema
             return ret;
         }
     }
-    public struct PersonTraitInfo
+    public readonly struct PersonTraitInfo
     {
         public readonly int? disease, death_p;
         public readonly int[]? die_probability, die_age;

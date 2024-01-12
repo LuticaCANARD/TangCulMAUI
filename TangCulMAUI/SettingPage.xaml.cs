@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using TangCulMAUI.DataGrid;
 using TangCulMAUI.Schema.InternalData;
 
@@ -55,6 +57,12 @@ public partial class SettingPage : ContentPage
             AppData.Instance.SettingPath = result.FullPath;
             PersonList.SetPersonSetting();
         }
+    }
+
+    private void CallPopup(object sender, EventArgs e)
+    {
+        var popup = new TraitEditer();
+        this.ShowPopup(popup);
     }
     
 }

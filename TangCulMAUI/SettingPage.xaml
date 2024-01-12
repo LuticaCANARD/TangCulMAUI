@@ -22,7 +22,7 @@
         <Button  x:Name="SettingSelect__"
                 Text="Select Setting File"
                 SemanticProperties.Hint="Select Setting.json"
-                Clicked="SetPath"
+                Clicked="CallPopup"
                 HorizontalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>
