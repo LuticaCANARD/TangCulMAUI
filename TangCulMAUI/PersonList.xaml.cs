@@ -7,12 +7,8 @@ namespace TangCulMAUI;
 
 public partial class PersonList : ContentPage
 {
-
-
-    public List<Person> SelectedPersonData = new List<Person>();
+    public List<Person> SelectedPersonData = [];
     public List<Person> Source_ = AppData.Instance.PersonData;
-
-
 
     public PersonList()
 	{
@@ -22,23 +18,20 @@ public partial class PersonList : ContentPage
          );
         InitializeComponent();
         BindingContext = new PersonData();
-
-
-
     }
 
 
-	public void LoadPersonList()
+	public static void LoadPersonList()
 	{
         try
         {
             AppData.Instance.PersonData.Clear();
-            string seriallizedData = File.ReadAllText(AppData.Instance.SettingPath);
+            string seriallizedData = File.ReadAllText(AppData.Instance.SavePath);
             JArray personOrigionData = JArray.Parse(seriallizedData);
             foreach (JObject personObject in personOrigionData.Cast<JObject>())
             {
                 PersonStatus status_Dis = PersonStatus.Alive;
-                JToken alive_ = personObject["st_die"];
+                JToken alive_ = personObject["state_die"];
                 if (alive_ != null)
                     status_Dis = (int) alive_ == 2 ? PersonStatus.Alive :
                                  (int) alive_ == 1 ? PersonStatus.Sick : PersonStatus.Dead;
@@ -58,4 +51,20 @@ public partial class PersonList : ContentPage
             Console.WriteLine(ex.ToString());
         }
 	}
+
+    public static void SetPersonSetting()
+    {
+        try
+        {
+            string seriallizedData = File.ReadAllText(AppData.Instance.SettingPath);
+            JObject origin = JObject.Parse(seriallizedData);
+            AppData.Instance.setting = new PersonSetting(origin);
+
+        } 
+        catch (Exception ex)
+        {
+            // 에러나면 알려주기.
+            Console.WriteLine(ex.ToString());
+        }
+    }
 }

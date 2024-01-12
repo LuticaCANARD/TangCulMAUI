@@ -8,5 +8,6 @@ namespace TangCulMAUI.Schema.DB
 {
     class DataLoader
     {
+
     }
 }

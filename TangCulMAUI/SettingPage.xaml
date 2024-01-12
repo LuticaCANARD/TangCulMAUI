@@ -9,14 +9,14 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
         <Button  x:Name="SettingSelect"
-                Text="Select Setting File"
+                Text="인물 설정 물러오기"
                 SemanticProperties.Hint="Select Setting.json"
-                Clicked="SetPath"
+                Clicked="SetPersonDataPath"
                 HorizontalOptions="Center" />
         <Button  x:Name="SettingSelect_"
                 Text="Select Setting File"
                 SemanticProperties.Hint="Select Setting.json"
-                Clicked="SetPath"
+                Clicked="SetSettingDataPath"
                 HorizontalOptions="Center" />
 
         <Button  x:Name="SettingSelect__"
