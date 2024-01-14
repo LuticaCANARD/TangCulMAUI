@@ -61,8 +61,9 @@ public partial class SettingPage : ContentPage
 
     private void CallPopup(object sender, EventArgs e)
     {
-        var popup = new TraitEditer();
-        this.ShowPopup(popup);
+        Window lao = new Window(new TraitEditer());
+        Application.Current.OpenWindow(lao);
+
     }
-    
+
 }
