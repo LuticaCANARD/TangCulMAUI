@@ -198,18 +198,33 @@ namespace TangCulMAUI.Schema
             return v;
         }
 
-        public JObject SavePersonToJsonObject(string path)
+        public JObject SavePersonToJsonObject()
         {
-            string real_path = path ?? AppData.Instance.SavePath;
-            JObject ret = new JObject();
+            JObject ret = new();
             try
             {
+                ret["name"] = Name ?? "error";
+                ret["age"] = Age;
+                switch (Status)
+                {
+                    case PersonStatus.Alive:
+                        ret["state_die"] = 2;
+                        break;
+                    case PersonStatus.Sick:
+                        ret["state_die"] = 1;
+                        break;
+                    case PersonStatus.Dead:
+                        ret["state_die"] = 0;
+                        break;
+                }
+                ret["trait"] = new JArray(Traits ?? []);
+                ret["agent"] = Agent;
                 return ret;
             } 
             catch (Exception ex)
             {
 
-                return new JObject();
+                return new();
             }
         }
     }

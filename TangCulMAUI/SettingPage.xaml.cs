@@ -2,7 +2,8 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using TangCulMAUI.DataGrid;
 using TangCulMAUI.Schema.InternalData;
-
+using Newtonsoft.Json.Linq;
+using TangCulMAUI.Schema;
 namespace TangCulMAUI;
 
 public partial class SettingPage : ContentPage
@@ -31,9 +32,27 @@ public partial class SettingPage : ContentPage
         if(result!=null && result.FileName.EndsWith(".json"))
         {
             AppData.Instance.SavePath = result.FullPath;
-            PersonList.LoadPersonList();
+            //PersonList.LoadPersonList();
         }
 
+    }
+    public static void SavePersonList(object sender, EventArgs e)
+    {
+        JArray personList = new JArray();
+        try
+        {
+            foreach (Person person in AppData.Instance.PersonData)
+            {
+                personList.Add(person.SavePersonToJsonObject());
+            }
+            string db = personList.ToString();
+            File.WriteAllText(AppData.Instance.SavePath, db);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
     }
     private async void SetSettingDataPath(object sender, EventArgs e)
     {
@@ -61,9 +80,8 @@ public partial class SettingPage : ContentPage
 
     private void CallPopup(object sender, EventArgs e)
     {
-        Window lao = new Window(new TraitEditer());
-        Application.Current.OpenWindow(lao);
-
+        Window lao = new(new TraitEditer());
+        Application.Current?.OpenWindow(lao);
     }
 
 }

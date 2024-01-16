@@ -16,6 +16,7 @@ public partial class PersonList : ContentPage
         AppData.Instance.PersonData.Add(
             new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb")
          );
+        AppData.Instance.PersonData.Add(new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb"));
         InitializeComponent();
         BindingContext = new PersonData();
     }
@@ -41,7 +42,7 @@ public partial class PersonList : ContentPage
                     (int)(personObject["age"] ?? 0),
                     personObject["trait"].ToObject<string[]>(),
                     status_Dis,
-                    (string)personObject["trait"]
+                    (string)personObject["agent"]
                 );
                 AppData.Instance.PersonData.Add(loadedperson);
             }
@@ -51,9 +52,11 @@ public partial class PersonList : ContentPage
             Console.WriteLine(ex.ToString());
         }
 	}
+   
 
     public static void SetPersonSetting()
     {
+
         try
         {
             string seriallizedData = File.ReadAllText(AppData.Instance.SettingPath);

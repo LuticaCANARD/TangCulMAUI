@@ -15,10 +15,14 @@
                 HorizontalOptions="Center" />
         <Button  x:Name="SettingSelect_"
                 Text="Select Setting File"
-                SemanticProperties.Hint="Select Setting.json"
-                Clicked="SetSettingDataPath"
+                SemanticProperties.Hint="Select Setting.json__"
+                Clicked="SavePersonList"
                 HorizontalOptions="Center" />
-
+        <Button  x:Name="SettingSelect___"
+                Text="Select Setting fdgdf"
+                SemanticProperties.Hint="Select Setting.json__"
+                Clicked="SavePersonList"
+                HorizontalOptions="Center" />
         <Button  x:Name="SettingSelect__"
                 Text="Select Setting File"
                 SemanticProperties.Hint="Select Setting.json"
