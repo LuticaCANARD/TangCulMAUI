@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SQLite;
 using TangCulMAUI.Schema.InternalData;
 
 
@@ -58,6 +59,11 @@ namespace TangCulMAUI.Schema
         Sick,
         Dead
     }
+    public class PersonData()
+    {
+
+    }
+
     public class Person(string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
     {
         public string? Name { get; set; } = _name;
@@ -72,7 +78,8 @@ namespace TangCulMAUI.Schema
                     if(i!= Traits.Length-1) show += ", ";
                 }
                 return show;
-            } }
+            } 
+        }
 
         public int StatusToDie { get; set; }
         public int DicePoint { get; set; }
@@ -210,6 +217,18 @@ namespace TangCulMAUI.Schema
 
                 return new JObject();
             }
+        }
+        public static explicit operator DB.DBPersonData(Person origin)
+        {
+            DB.DBPersonData ret = new()
+            {
+                Name = origin.Name,
+                Traits = String.Join('\t',origin.Traits),
+                Status = origin.Status,
+                Agent = origin.Agent,
+                Age = origin.Age,
+            };
+            return ret;
         }
     }
 

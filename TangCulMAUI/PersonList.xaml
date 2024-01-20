@@ -15,20 +15,20 @@
             </dg:DataGrid.NoDataView>
 
             <dg:DataGrid.Columns>
-                <dg:DataGridColumn Title="Image" PropertyName="Image" Width="150" SortingEnabled="False">
-                    <dg:DataGridColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding}" HorizontalOptions="Center" VerticalOptions="Center"
-                               Aspect="AspectFit" HeightRequest="60" />
-                        </DataTemplate>
-                    </dg:DataGridColumn.CellTemplate>
-                </dg:DataGridColumn>
+
                 <dg:DataGridColumn Title="이름" PropertyName="Name" />
                 <dg:DataGridColumn Title="나이" PropertyName="Age" />
                 <dg:DataGridColumn Title="특성" PropertyName="TraitsToShow" />
                 <dg:DataGridColumn Title="상태" PropertyName="DisplayStatus" />
-                <dg:DataGridColumn Title="Dice" PropertyName="Dice" />
+                <dg:DataGridColumn Title="Dice" PropertyName="DicePoint" />
                 <dg:DataGridColumn Title="소속" PropertyName="Agent" />
+                <dg:DataGridColumn Title="Edit">
+                    <dg:DataGridColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Clicked="EditPerson"    />
+                        </DataTemplate>
+                    </dg:DataGridColumn.CellTemplate>
+                </dg:DataGridColumn>
             </dg:DataGrid.Columns>
             <dg:DataGrid.RowsBackgroundColorPalette>
                 <dg:PaletteCollection>

@@ -2,7 +2,6 @@ using Newtonsoft.Json.Linq;
 using TangCulMAUI.DataGrid;
 using TangCulMAUI.Schema;
 using TangCulMAUI.Schema.InternalData;
-
 namespace TangCulMAUI;
 
 public partial class PersonList : ContentPage
@@ -11,19 +10,16 @@ public partial class PersonList : ContentPage
 
     public List<Person> SelectedPersonData = new List<Person>();
     public List<Person> Source_ = AppData.Instance.PersonData;
-
+    PersonDataView data;
 
 
     public PersonList()
 	{
         LoadPersonList();
-        AppData.Instance.PersonData.Add(
-            new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb")
-         );
+        AppData.Instance.PersonData= Schema.DB.SQLiteConnector.Instance.LoadPersonList();
         InitializeComponent();
-        BindingContext = new PersonData();
-
-
+        data = new PersonDataView();
+        BindingContext = data;
 
     }
 
@@ -58,4 +54,9 @@ public partial class PersonList : ContentPage
             Console.WriteLine(ex.ToString());
         }
 	}
+
+    private void EditPerson(object sender, EventArgs e)
+    {
+        //data.SelectedPerson.Status;
+    }
 }

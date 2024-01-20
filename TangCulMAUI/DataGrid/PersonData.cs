@@ -11,7 +11,7 @@ using TangCulMAUI.Schema.InternalData;
 
 namespace TangCulMAUI.DataGrid
 {
-    internal class PersonData : INotifyPropertyChanged
+    internal class PersonDataView : INotifyPropertyChanged
     {
         private List<Person> _people;
         private Person _humanToEdit;
@@ -23,7 +23,7 @@ namespace TangCulMAUI.DataGrid
         private bool _paginationEnabled = true;
         private ushort _teamColumnWidth = 70;
 
-        public PersonData() 
+        public PersonDataView() 
         {
             People = AppData.Instance.PersonData;
             CancelEditCommand = new Command(CmdCancelEdit);
