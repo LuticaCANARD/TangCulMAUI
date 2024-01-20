@@ -26,7 +26,8 @@ namespace TangCulMAUI.Schema
             Traits = ParsingTraits((JObject)Pairs["Traits"]);
             // JSON에서 여기로 저장.
         }
-        Dictionary<string, PersonTraitInfo> ParsingTraits(JObject pairs)
+
+        static Dictionary<string, PersonTraitInfo> ParsingTraits(JObject pairs)
         {
             Dictionary<string, PersonTraitInfo> ret = new();
             foreach (var pair in pairs)
@@ -38,7 +39,7 @@ namespace TangCulMAUI.Schema
             return ret;
         }
     }
-    public struct PersonTraitInfo
+    public readonly struct PersonTraitInfo
     {
         public readonly int? disease, death_p;
         public readonly int[]? die_probability, die_age;
@@ -204,18 +205,33 @@ namespace TangCulMAUI.Schema
             return v;
         }
 
-        public JObject SavePersonToJsonObject(string path)
+        public JObject SavePersonToJsonObject()
         {
-            string real_path = path ?? AppData.Instance.SavePath;
-            JObject ret = new JObject();
+            JObject ret = new();
             try
             {
+                ret["name"] = Name ?? "error";
+                ret["age"] = Age;
+                switch (Status)
+                {
+                    case PersonStatus.Alive:
+                        ret["state_die"] = 2;
+                        break;
+                    case PersonStatus.Sick:
+                        ret["state_die"] = 1;
+                        break;
+                    case PersonStatus.Dead:
+                        ret["state_die"] = 0;
+                        break;
+                }
+                ret["trait"] = new JArray(Traits ?? []);
+                ret["agent"] = Agent;
                 return ret;
             } 
             catch (Exception ex)
             {
 
-                return new JObject();
+                return new();
             }
         }
         public static explicit operator DB.DBPersonData(Person origin)

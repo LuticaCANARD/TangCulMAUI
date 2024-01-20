@@ -6,35 +6,36 @@ namespace TangCulMAUI;
 
 public partial class PersonList : ContentPage
 {
-
-
-    public List<Person> SelectedPersonData = new List<Person>();
+    public List<Person> SelectedPersonData = [];
     public List<Person> Source_ = AppData.Instance.PersonData;
     PersonDataView data;
 
 
-    public PersonList()
-	{
-        LoadPersonList();
+
+
+
         AppData.Instance.PersonData= Schema.DB.SQLiteConnector.Instance.LoadPersonList();
-        InitializeComponent();
+        AppData.Instance.PersonData.Add(
         data = new PersonDataView();
         BindingContext = data;
+
+
+
 
     }
 
 
-	public void LoadPersonList()
+	public static void LoadPersonList()
 	{
         try
         {
             AppData.Instance.PersonData.Clear();
-            string seriallizedData = File.ReadAllText(AppData.Instance.SettingPath);
+            string seriallizedData = File.ReadAllText(AppData.Instance.SavePath);
             JArray personOrigionData = JArray.Parse(seriallizedData);
             foreach (JObject personObject in personOrigionData.Cast<JObject>())
             {
                 PersonStatus status_Dis = PersonStatus.Alive;
-                JToken alive_ = personObject["st_die"];
+                JToken alive_ = personObject["state_die"];
                 if (alive_ != null)
                     status_Dis = (int) alive_ == 2 ? PersonStatus.Alive :
                                  (int) alive_ == 1 ? PersonStatus.Sick : PersonStatus.Dead;
@@ -44,19 +45,19 @@ public partial class PersonList : ContentPage
                     (int)(personObject["age"] ?? 0),
                     personObject["trait"].ToObject<string[]>(),
                     status_Dis,
-                    (string)personObject["trait"]
+                    (string)personObject["agent"]
                 );
                 AppData.Instance.PersonData.Add(loadedperson);
             }
         }
         catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
 	}
 
     private void EditPerson(object sender, EventArgs e)
     {
         //data.SelectedPerson.Status;
     }
+            Console.WriteLine(ex.ToString());
+        }
+	}
 }

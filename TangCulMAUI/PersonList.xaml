@@ -9,7 +9,7 @@
         <!--        <Button Text="Clear monkeys" Clicked="Button_Clicked" Margin="10" /> -->
         <dg:DataGrid Grid.Row="1" ItemsSource="{Binding People}" SelectionEnabled="True" SelectedItem="{Binding SelectedPerson}"
                      RowHeight="70" HeaderHeight="50" PullToRefreshCommand="{Binding RefreshCommand}"
-                     IsRefreshing="{Binding IsRefreshing}" HeaderBackground="Red">
+                     IsRefreshing="{Binding IsRefreshing}" HeaderBackground="#E6E6E6">
             <dg:DataGrid.NoDataView>
                 <Label Text="Nothing to see here 🙈" HorizontalOptions="Center" VerticalOptions="Center" />
             </dg:DataGrid.NoDataView>
@@ -32,8 +32,8 @@
             </dg:DataGrid.Columns>
             <dg:DataGrid.RowsBackgroundColorPalette>
                 <dg:PaletteCollection>
-                    <Color>#F2F2F2</Color>
-                    <Color>#FFFFFF</Color>
+                    <Color>#BDBDBD</Color>
+                    <Color>#E6E6E6</Color>
                 </dg:PaletteCollection>
             </dg:DataGrid.RowsBackgroundColorPalette>
             <dg:DataGrid.Resources>
