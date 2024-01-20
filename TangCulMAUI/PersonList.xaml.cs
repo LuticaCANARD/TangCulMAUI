@@ -9,22 +9,18 @@ public partial class PersonList : ContentPage
     public List<Person> SelectedPersonData = [];
     public List<Person> Source_ = AppData.Instance.PersonData;
     PersonDataView data;
-
-
-
-
-
-        AppData.Instance.PersonData= Schema.DB.SQLiteConnector.Instance.LoadPersonList();
+    public PersonList()
+    {
+        LoadPersonList();
         AppData.Instance.PersonData.Add(
-        data = new PersonDataView();
-        BindingContext = data;
-
+            new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb")
+         );
+        InitializeComponent();
+        BindingContext = new PersonData();
 
 
 
     }
-
-
 	public static void LoadPersonList()
 	{
         try
@@ -50,14 +46,12 @@ public partial class PersonList : ContentPage
                 AppData.Instance.PersonData.Add(loadedperson);
             }
         }
-        catch (Exception ex)
+        catch (Exception ex) { 
+            Console.WriteLine(ex.ToString());
+        }
 	}
-
     private void EditPerson(object sender, EventArgs e)
     {
         //data.SelectedPerson.Status;
     }
-            Console.WriteLine(ex.ToString());
-        }
-	}
 }

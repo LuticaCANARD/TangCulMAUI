@@ -65,8 +65,10 @@ namespace TangCulMAUI.Schema
 
     }
 
-    public class Person(string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
+    public class Person(int id,string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
     {
+        public int Id { get; set; } = id;
+
         public string? Name { get; set; } = _name;
         public int Age { get; set; } = _age;
         public string[]? Traits { get; set; } = _trait;
@@ -238,8 +240,9 @@ namespace TangCulMAUI.Schema
         {
             DB.DBPersonData ret = new()
             {
+                Id = origin.Id,
                 Name = origin.Name,
-                Traits = String.Join('\t',origin.Traits),
+                Traits = string.Join('\t', origin.Traits ?? []),
                 Status = origin.Status,
                 Agent = origin.Agent,
                 Age = origin.Age,

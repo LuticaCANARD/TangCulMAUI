@@ -22,7 +22,7 @@ namespace TangCulMAUI.Schema.DB
         public static explicit operator Person(DBPersonData data)
         {
 
-            return new Person(data.Name, data.Age, data.Traits?.Split('\t'), data.Status, data.Agent);
+            return new Person(data.Id,data.Name, data.Age, data.Traits?.Split('\t'), data.Status, data.Agent);
         }
     }
     public class SQLiteConnector
@@ -58,28 +58,35 @@ namespace TangCulMAUI.Schema.DB
         public void SavePersonToDB(Person person)
         {
             DBPersonData data = (DBPersonData)person;
-            Task task = Database == null ? Init() : Database.InsertAsync(data);
-            if (Database == null)
-            {
-                task.Wait();
-                if( Database != null )
-                    task = Database.InsertAsync(data);
-            }
-            task.Wait();
+            if(Database == null) 
+                Init().Wait();
+            Database.InsertAsync(data).Wait();
         }
         public List<Person> LoadPersonList()
         {
             var list = new List<Person>();
             if(Database == null)
-            {
                  Init().Wait();
-
-            }
             Task<List<DBPersonData>> query = Database.Table<DBPersonData>().ToListAsync();
             foreach(DBPersonData data in query.Result){
                 list.Add((Person)data);
             }
             return list;
+        }
+        public void UpdatePersonInfo(Person person)
+        {
+            if (Database == null)
+            {
+                Init().Wait();
+            }
+            Database.UpdateAsync((DBPersonData)person).Wait();
+        }
+
+        public async Task DeletePersonInfo(Person person)
+        {
+            if (Database == null) { await Init(); }
+            DBPersonData personData = (DBPersonData)person;
+            await Database.DeleteAsync(personData);
         }
     }
 }
