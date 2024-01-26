@@ -60,10 +60,6 @@ namespace TangCulMAUI.Schema
         Sick,
         Dead
     }
-    public class PersonData()
-    {
-
-    }
 
     public class Person(int id,string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
     {

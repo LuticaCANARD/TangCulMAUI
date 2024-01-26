@@ -25,7 +25,7 @@ namespace TangCulMAUI.DataGrid
 
         public PersonDataView() 
         {
-            People = AppData.Instance.PersonData;
+            People = [];
             CancelEditCommand = new Command(CmdCancelEdit);
             EditCommand = new Command<Person>(CmdEdit);
             RefreshCommand = new Command(CmdRefresh);
@@ -141,8 +141,14 @@ namespace TangCulMAUI.DataGrid
         private async void CmdRefresh()
         {
             IsRefreshing = true;
+            People = new List<Person>();
+            People = AppData.Instance.PersonData;
+
+            //           _people.Clear();
+            //            foreach(Person p in AppData.Instance.PersonData)
+            //                _people.Add(p);
             // wait 3 secs for demo
-            await Task.Delay(3000);
+            //            await Task.Delay(3000);
             IsRefreshing = false;
         }
 

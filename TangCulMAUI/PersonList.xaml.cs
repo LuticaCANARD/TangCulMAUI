@@ -13,10 +13,14 @@ public partial class PersonList : ContentPage
     {
         LoadPersonList();
         AppData.Instance.PersonData.Add(
-            new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb")
+            new Person(1,"nem", 12, ["aa"], PersonStatus.Alive, "bb")
          );
         InitializeComponent();
-        BindingContext = new PersonData();
+        data = new PersonDataView
+        {
+            People = AppData.Instance.PersonData
+        };
+        BindingContext = data;
 
 
 
@@ -37,6 +41,7 @@ public partial class PersonList : ContentPage
                                  (int) alive_ == 1 ? PersonStatus.Sick : PersonStatus.Dead;
 
                 Person loadedperson = new(
+                    (int)(personObject["id"] ?? 0),
                     (string)(personObject["name"] ?? "error"),
                     (int)(personObject["age"] ?? 0),
                     personObject["trait"].ToObject<string[]>(),
@@ -52,6 +57,13 @@ public partial class PersonList : ContentPage
 	}
     private void EditPerson(object sender, EventArgs e)
     {
+        // 아마 이번주 목요일 끝낼듯 함. 
+        // 새 창을 띄워 올린 다음, 그 창에서 편집한 인물을 
+        AppData.Instance.PersonData.Add(
+             new Person(2, "nem2", 12, ["aa"], PersonStatus.Alive, "bb")
+        );
+
+        data.RefreshCommand.Execute(null);
         //data.SelectedPerson.Status;
     }
 }
