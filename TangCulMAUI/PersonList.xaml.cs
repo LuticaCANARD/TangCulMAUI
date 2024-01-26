@@ -59,10 +59,9 @@ public partial class PersonList : ContentPage
     {
         // 아마 이번주 목요일 끝낼듯 함. 
         // 새 창을 띄워 올린 다음, 그 창에서 편집한 인물을 
-        AppData.Instance.PersonData.Add(
-             new Person(2, "nem2", 12, ["aa"], PersonStatus.Alive, "bb")
-        );
-
+        if(data.SelectedPerson == null) return;
+        Window wd = new(new PersonEdit(data.SelectedPerson) );
+        Application.Current?.OpenWindow(wd);
         data.RefreshCommand.Execute(null);
         //data.SelectedPerson.Status;
     }

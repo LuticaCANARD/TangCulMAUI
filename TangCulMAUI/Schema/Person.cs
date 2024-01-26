@@ -64,7 +64,6 @@ namespace TangCulMAUI.Schema
     public class Person(int id,string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
     {
         public int Id { get; set; } = id;
-
         public string? Name { get; set; } = _name;
         public int Age { get; set; } = _age;
         public string[]? Traits { get; set; } = _trait;

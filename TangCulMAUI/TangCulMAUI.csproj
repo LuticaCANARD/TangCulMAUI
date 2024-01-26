@@ -68,6 +68,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="PersonEdit.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PersonList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
