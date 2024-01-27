@@ -1,3 +1,4 @@
+using Microsoft.Maui.Layouts;
 using Newtonsoft.Json.Linq;
 using TangCulMAUI.DataGrid;
 using TangCulMAUI.Schema;
@@ -60,9 +61,33 @@ public partial class PersonList : ContentPage
         // 아마 이번주 목요일 끝낼듯 함. 
         // 새 창을 띄워 올린 다음, 그 창에서 편집한 인물을 
         if(data.SelectedPerson == null) return;
-        Window wd = new(new PersonEdit(data.SelectedPerson) );
+        Window wd = new(new PersonEdit(data.SelectedPerson,data) );
         Application.Current?.OpenWindow(wd);
         data.RefreshCommand.Execute(null);
         //data.SelectedPerson.Status;
+    }
+    private void AddNewPerson(object sender, EventArgs e)
+    {
+
+    }
+    private void AddNewPersonTest(object sender, EventArgs e)
+    {
+        AppData.Instance.PersonData.Add(new Person(1, "nem", 12, ["aa"], PersonStatus.Alive, "bb"));
+        data.RefreshCommand.Execute(null);
+
+    }
+    private void DiceAll(object sender, EventArgs e)
+    {
+        foreach(Person p in AppData.Instance.PersonData) {
+            p.Dice(false,AppData.Instance.Setting);
+
+        }
+        data.RefreshCommand.Execute(null);
+    }
+    private void DiceSelected(object sender, EventArgs e)
+    {
+        if (data.SelectedPerson == null) return;
+        data.SelectedPerson.Dice(true,AppData.Instance.Setting);
+        data.RefreshCommand.Execute(null);
     }
 }

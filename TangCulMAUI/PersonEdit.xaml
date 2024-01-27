@@ -8,5 +8,19 @@
             Text="Welcome to .NET MAUI!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        <FlexLayout StyleClass="PersonAttribute">
+            <Label Text="이름" StyleClass="personEditDesc"/>
+            <Entry x:Name="ChangedName"/>
+        </FlexLayout>
+        <FlexLayout StyleClass="PersonAttribute">
+            <Label Text="dfsdfsdfsdfsd" StyleClass="personEditDesc"/>
+            <Entry x:Name="ChangedA"/>
+        </FlexLayout>
+        <FlexLayout StyleClass="PersonAttribute">
+            <Label Text="gregeer" StyleClass="personEditDesc"/>
+            <Entry x:Name="ChangedC"/>
+        </FlexLayout>
+
+
     </VerticalStackLayout>
 </ContentPage>

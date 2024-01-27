@@ -11,7 +11,7 @@ using TangCulMAUI.Schema.InternalData;
 
 namespace TangCulMAUI.DataGrid
 {
-    internal class PersonDataView : INotifyPropertyChanged
+    public class PersonDataView : INotifyPropertyChanged
     {
         private List<Person> _people;
         private Person _humanToEdit;

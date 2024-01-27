@@ -37,9 +37,9 @@
         </dg:DataGrid>
         <FlexLayout>
             <Button Text="선택한 인물 수정" Clicked="EditPerson"/>
-            <Button Text="새 인물 생성" Clicked="EditPerson"/>
+            <Button Text="새 인물 생성" Clicked="AddNewPersonTest"/>
             <Button Text="특성 수정/추가" Clicked="EditPerson"/>
-            <Button Text="Dice!" /> 
+            <Button Text="Dice!" Clicked="DiceAll"/> 
         </FlexLayout>
     </Grid>
 

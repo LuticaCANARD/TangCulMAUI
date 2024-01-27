@@ -110,7 +110,7 @@ namespace TangCulMAUI.Schema
         /// <summary>
         /// 사망등을 결정하는 Dice를 굴리고, 
         /// </summary>
-        /// <param name="mode"></param>
+        /// <param name="mode"> Age를 더하지 않는 경우 True입니다.</param>
         /// <returns></returns>
         public int Dice(bool mode, PersonSetting setting)
         {
