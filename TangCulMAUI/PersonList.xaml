@@ -5,28 +5,21 @@
              x:Class="TangCulMAUI.PersonList">
 
     <Grid RowDefinitions="70,*">
-        
+
         <!--        <Button Text="Clear monkeys" Clicked="Button_Clicked" Margin="10" /> -->
         <dg:DataGrid Grid.Row="1" ItemsSource="{Binding People}" SelectionEnabled="True" SelectedItem="{Binding SelectedPerson}"
                      RowHeight="70" HeaderHeight="50" PullToRefreshCommand="{Binding RefreshCommand}"
-                     IsRefreshing="{Binding IsRefreshing}" HeaderBackground="#E6E6E6">
+                     IsRefreshing="{Binding IsRefreshing}" HeaderBackground="#E6E6E6" >
             <dg:DataGrid.NoDataView>
                 <Label Text="Nothing to see here 🙈" HorizontalOptions="Center" VerticalOptions="Center" />
             </dg:DataGrid.NoDataView>
 
             <dg:DataGrid.Columns>
-                <!--<dg:DataGridColumn Title="Image" PropertyName="Image" Width="150" SortingEnabled="False">-->
-                <!--<dg:DataGridColumn.CellTemplate>-->
-                       <!-- <DataTemplate>-->
-                           <!-- <Image Source="{Binding}" HorizontalOptions="Center" VerticalOptions="Center"-->
-                             <!--  Aspect="AspectFit" HeightRequest="60" />-->
-                       <!-- </DataTemplate>-->
-                    <!--</dg:DataGridColumn.CellTemplate>-->
-                <!--</dg:DataGridColumn>-->
+
                 <dg:DataGridColumn Title="이름" PropertyName="Name" />
                 <dg:DataGridColumn Title="나이" PropertyName="Age" />
                 <dg:DataGridColumn Title="특성" PropertyName="TraitsToShow" />
-                <dg:DataGridColumn Title="상태" PropertyName="DisplayStatus" />
+                <dg:DataGridColumn Title="상태" PropertyName="DisplayStatus"/>
                 <dg:DataGridColumn Title="Dice" PropertyName="DicePoint" />
                 <dg:DataGridColumn Title="소속" PropertyName="Agent" />
             </dg:DataGrid.Columns>
@@ -42,5 +35,12 @@
                 </ResourceDictionary>
             </dg:DataGrid.Resources>
         </dg:DataGrid>
+        <FlexLayout>
+            <Button Text="선택한 인물 수정" Clicked="EditPerson"/>
+            <Button Text="새 인물 생성" Clicked="AddNewPersonTest"/>
+            <Button Text="특성 수정/추가" Clicked="EditPerson"/>
+            <Button Text="Dice!" Clicked="DiceAll"/> 
+        </FlexLayout>
     </Grid>
+
 </ContentPage>

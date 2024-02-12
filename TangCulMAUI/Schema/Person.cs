@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SQLite;
 using TangCulMAUI.Schema.InternalData;
 
 
@@ -59,8 +60,10 @@ namespace TangCulMAUI.Schema
         Sick,
         Dead
     }
-    public class Person(string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
+
+    public class Person(int id,string _name, int _age, string[] _trait, PersonStatus _st_die, string _agent)
     {
+        public int Id { get; set; } = id;
         public string? Name { get; set; } = _name;
         public int Age { get; set; } = _age;
         public string[]? Traits { get; set; } = _trait;
@@ -73,7 +76,8 @@ namespace TangCulMAUI.Schema
                     if(i!= Traits.Length-1) show += ", ";
                 }
                 return show;
-            } }
+            } 
+        }
 
         public int StatusToDie { get; set; }
         public int DicePoint { get; set; }
@@ -106,7 +110,7 @@ namespace TangCulMAUI.Schema
         /// <summary>
         /// 사망등을 결정하는 Dice를 굴리고, 
         /// </summary>
-        /// <param name="mode"></param>
+        /// <param name="mode"> Age를 더하지 않는 경우 True입니다.</param>
         /// <returns></returns>
         public int Dice(bool mode, PersonSetting setting)
         {
@@ -226,6 +230,19 @@ namespace TangCulMAUI.Schema
 
                 return new();
             }
+        }
+        public static explicit operator DB.DBPersonData(Person origin)
+        {
+            DB.DBPersonData ret = new()
+            {
+                Id = origin.Id,
+                Name = origin.Name,
+                Traits = string.Join('\t', origin.Traits ?? []),
+                Status = origin.Status,
+                Agent = origin.Agent,
+                Age = origin.Age,
+            };
+            return ret;
         }
     }
 

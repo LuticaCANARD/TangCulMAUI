@@ -1,27 +1,31 @@
+using Microsoft.Maui.Layouts;
 using Newtonsoft.Json.Linq;
 using TangCulMAUI.DataGrid;
 using TangCulMAUI.Schema;
 using TangCulMAUI.Schema.InternalData;
-
 namespace TangCulMAUI;
 
 public partial class PersonList : ContentPage
 {
     public List<Person> SelectedPersonData = [];
     public List<Person> Source_ = AppData.Instance.PersonData;
-
+    PersonDataView data;
     public PersonList()
-	{
+    {
         LoadPersonList();
         AppData.Instance.PersonData.Add(
-            new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb")
+            new Person(1,"nem", 12, ["aa"], PersonStatus.Alive, "bb")
          );
-        AppData.Instance.PersonData.Add(new Person("nem", 12, ["aa"], PersonStatus.Alive, "bb"));
         InitializeComponent();
-        BindingContext = new PersonData();
+        data = new PersonDataView
+        {
+            People = AppData.Instance.PersonData
+        };
+        BindingContext = data;
+
+
+
     }
-
-
 	public static void LoadPersonList()
 	{
         try
@@ -38,6 +42,7 @@ public partial class PersonList : ContentPage
                                  (int) alive_ == 1 ? PersonStatus.Sick : PersonStatus.Dead;
 
                 Person loadedperson = new(
+                    (int)(personObject["id"] ?? 0),
                     (string)(personObject["name"] ?? "error"),
                     (int)(personObject["age"] ?? 0),
                     personObject["trait"].ToObject<string[]>(),
@@ -47,27 +52,42 @@ public partial class PersonList : ContentPage
                 AppData.Instance.PersonData.Add(loadedperson);
             }
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) { 
             Console.WriteLine(ex.ToString());
         }
 	}
-   
-
-    public static void SetPersonSetting()
+    private void EditPerson(object sender, EventArgs e)
+    {
+        // 아마 이번주 목요일 끝낼듯 함. 
+        // 새 창을 띄워 올린 다음, 그 창에서 편집한 인물을 
+        if(data.SelectedPerson == null) return;
+        Window wd = new(new PersonEdit(data.SelectedPerson,data) );
+        Application.Current?.OpenWindow(wd);
+        data.RefreshCommand.Execute(null);
+        //data.SelectedPerson.Status;
+    }
+    private void AddNewPerson(object sender, EventArgs e)
     {
 
-        try
-        {
-            string seriallizedData = File.ReadAllText(AppData.Instance.SettingPath);
-            JObject origin = JObject.Parse(seriallizedData);
-            AppData.Instance.setting = new PersonSetting(origin);
+    }
+    private void AddNewPersonTest(object sender, EventArgs e)
+    {
+        AppData.Instance.PersonData.Add(new Person(1, "nem", 12, ["aa"], PersonStatus.Alive, "bb"));
+        data.RefreshCommand.Execute(null);
 
-        } 
-        catch (Exception ex)
-        {
-            // 에러나면 알려주기.
-            Console.WriteLine(ex.ToString());
+    }
+    private void DiceAll(object sender, EventArgs e)
+    {
+        foreach(Person p in AppData.Instance.PersonData) {
+            p.Dice(false,AppData.Instance.Setting);
+
         }
+        data.RefreshCommand.Execute(null);
+    }
+    private void DiceSelected(object sender, EventArgs e)
+    {
+        if (data.SelectedPerson == null) return;
+        data.SelectedPerson.Dice(true,AppData.Instance.Setting);
+        data.RefreshCommand.Execute(null);
     }
 }
