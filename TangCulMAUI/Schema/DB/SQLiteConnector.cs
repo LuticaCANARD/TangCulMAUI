@@ -9,7 +9,7 @@ namespace TangCulMAUI.Schema.DB
 {
     class SQLiteConnector
     {
-        SQLiteAsyncConnection Database;
+        SQLiteConnection Database;
         async Task Init()
         {
             if (Database is not null)
