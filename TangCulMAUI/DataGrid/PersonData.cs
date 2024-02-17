@@ -106,6 +106,7 @@ namespace TangCulMAUI.DataGrid
             set
             {
                 _selectedItem = value;
+                // 더블클릭시 이게 나옴.
                 Debug.WriteLine("Team Selected : " + value?.Name);
             }
         }

@@ -36,7 +36,7 @@ public partial class SettingPage : ContentPage
     }
     public static void SavePersonList(object sender, EventArgs e)
     {
-        JArray personList = new JArray();
+        JArray personList = [];
         try
         {
             foreach (Person person in AppData.Instance.PersonData)
