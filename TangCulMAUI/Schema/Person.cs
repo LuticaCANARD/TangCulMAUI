@@ -115,12 +115,10 @@ namespace TangCulMAUI.Schema
         public int Dice(bool mode, PersonSetting setting)
         {
             if (Status == PersonStatus.Dead && !mode) return 0;
-
+            if (setting.die_age == null) return -1;
             Random rand = new();
-
             int dice = Age < setting.dice_age ? GetMaxDice() : rand.Next(0, 1000);
             if (!mode) Age++;
-
             int diseases = 0;
             int diseases_count = 1;
             int dis = setting.disease;

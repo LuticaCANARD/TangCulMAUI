@@ -22,9 +22,6 @@ public partial class PersonList : ContentPage
             People = AppData.Instance.PersonData
         };
         BindingContext = data;
-
-
-
     }
 	public static void LoadPersonList()
 	{
@@ -74,13 +71,11 @@ public partial class PersonList : ContentPage
     {
         AppData.Instance.PersonData.Add(new Person(1, "nem", 12, ["aa"], PersonStatus.Alive, "bb"));
         data.RefreshCommand.Execute(null);
-
     }
     private void DiceAll(object sender, EventArgs e)
     {
         foreach(Person p in AppData.Instance.PersonData) {
             p.Dice(false,AppData.Instance.Setting);
-
         }
         data.RefreshCommand.Execute(null);
     }

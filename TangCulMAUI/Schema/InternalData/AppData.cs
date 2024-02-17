@@ -22,7 +22,7 @@ namespace TangCulMAUI.Schema.InternalData
         public string SavePath = "";
         public string SettingPath = "";
         public string SqlPath =Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sql");
-        public PersonSetting Setting = new PersonSetting();
+        public PersonSetting Setting;
 
     }
 }

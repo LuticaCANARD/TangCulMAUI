@@ -72,7 +72,7 @@ public partial class SettingPage : ContentPage
         if (result != null && result.FileName.EndsWith(".json"))
         {
             AppData.Instance.SettingPath = result.FullPath;
-//            PersonList.SetPersonSetting();
+            AppData.Instance.Setting = new PersonSetting(JObject.Parse(File.ReadAllText(result.FullPath)));    
         }
     }
 

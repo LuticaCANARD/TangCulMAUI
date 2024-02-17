@@ -8,7 +8,7 @@
 
         <!--        <Button Text="Clear monkeys" Clicked="Button_Clicked" Margin="10" /> -->
         <dg:DataGrid Grid.Row="1" ItemsSource="{Binding People}" SelectionEnabled="True" SelectedItem="{Binding SelectedPerson}"
-                     RowHeight="70" HeaderHeight="50" PullToRefreshCommand="{Binding RefreshCommand}"
+                     RowHeight="50" HeaderHeight="50" PullToRefreshCommand="{Binding RefreshCommand}"
                      IsRefreshing="{Binding IsRefreshing}" HeaderBackground="#E6E6E6" >
             <dg:DataGrid.NoDataView>
                 <Label Text="Nothing to see here 🙈" HorizontalOptions="Center" VerticalOptions="Center" />
@@ -35,7 +35,9 @@
                 </ResourceDictionary>
             </dg:DataGrid.Resources>
         </dg:DataGrid>
-        <FlexLayout>
+
+
+        <FlexLayout StyleClass="flex-button-person" AlignContent="Stretch" AlignItems="Stretch" IsClippedToBounds="False" JustifyContent="SpaceEvenly" Padding="0" Margin="0,10">
             <Button Text="선택한 인물 수정" Clicked="EditPerson"/>
             <Button Text="새 인물 생성" Clicked="AddNewPersonTest"/>
             <Button Text="특성 수정/추가" Clicked="EditPerson"/>
